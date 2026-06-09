@@ -3,274 +3,213 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Dashboard Financeiro - Junho 2026 | Projuris ADV</title>
+  <title>Dashboard Financeiro 2026 | Projuris ADV</title>
   <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.0/dist/chart.umd.min.js"></script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #0f172a; color: #e2e8f0; min-height: 100vh; }
-
-    /* PASSWORD OVERLAY */
-    #pw-overlay {
-      position: fixed; inset: 0; z-index: 9999;
-      background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%);
-      display: flex; align-items: center; justify-content: center;
-    }
-    #pw-box {
-      background: #1e293b; border: 1px solid #334155; border-radius: 16px;
-      padding: 48px 40px; max-width: 400px; width: 90%; text-align: center;
-      box-shadow: 0 25px 50px rgba(0,0,0,0.5);
-    }
+    /* PASSWORD */
+    #pw-overlay { position: fixed; inset: 0; z-index: 9999; background: linear-gradient(135deg, #0f172a 0%, #1e293b 100%); display: flex; align-items: center; justify-content: center; }
+    #pw-box { background: #1e293b; border: 1px solid #334155; border-radius: 16px; padding: 48px 40px; max-width: 400px; width: 90%; text-align: center; box-shadow: 0 25px 50px rgba(0,0,0,0.5); }
     #pw-box .lock-icon { font-size: 3rem; margin-bottom: 16px; }
     #pw-box h2 { color: #60a5fa; font-size: 1.4rem; margin-bottom: 8px; }
     #pw-box p { color: #94a3b8; font-size: 0.9rem; margin-bottom: 28px; }
-    #pw-input {
-      width: 100%; padding: 12px 16px; border-radius: 8px;
-      border: 1px solid #334155; background: #0f172a; color: #e2e8f0;
-      font-size: 1rem; margin-bottom: 16px; outline: none; letter-spacing: 0.05em;
-      transition: border-color 0.2s;
-    }
+    #pw-input { width: 100%; padding: 12px 16px; border: 1px solid #334155; background: #0f172a; color: #e2e8f0; font-size: 1rem; border-radius: 8px; outline: none; margin-bottom: 16px; text-align: center; letter-spacing: 0.1em; }
     #pw-input:focus { border-color: #60a5fa; }
-    #pw-input.error { border-color: #ef4444; animation: shake 0.3s; }
-    #pw-btn {
-      width: 100%; padding: 12px; border-radius: 8px; border: none;
-      background: linear-gradient(135deg, #3b82f6, #1d4ed8); color: white;
-      font-size: 1rem; font-weight: 600; cursor: pointer; transition: opacity 0.2s;
-    }
+    #pw-btn { width: 100%; padding: 12px; background: linear-gradient(135deg, #3b82f6, #2563eb); color: white; border: none; border-radius: 8px; font-size: 1rem; font-weight: 600; cursor: pointer; transition: opacity 0.2s; }
     #pw-btn:hover { opacity: 0.9; }
-    #pw-error { color: #f87171; font-size: 0.85rem; margin-top: 12px; min-height: 20px; }
-    #dashboard { display: none; }
-    @keyframes shake {
-      0%,100%{transform:translateX(0)} 25%{transform:translateX(-8px)} 75%{transform:translateX(8px)}
+    #pw-error { color: #f87171; font-size: 0.85rem; margin-top: 12px; display: none; }
+    /* HEADER */
+    .header { background: linear-gradient(135deg, #1e293b, #0f172a); border-bottom: 1px solid #334155; padding: 24px 32px; display: flex; align-items: center; justify-content: space-between; }
+    .header h1 { font-size: 1.5rem; font-weight: 700; color: #60a5fa; }
+    .header-sub { color: #94a3b8; font-size: 0.85rem; margin-top: 4px; }
+    .header-badge { background: #1e3a5f; color: #60a5fa; border: 1px solid #2563eb; border-radius: 20px; padding: 6px 16px; font-size: 0.8rem; font-weight: 600; }
+    /* MAIN */
+    .main { padding: 32px; max-width: 1400px; margin: 0 auto; }
+    /* GLOBAL KPIs */
+    .global-kpis { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin-bottom: 32px; }
+    .gkpi { background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 20px 24px; }
+    .gkpi-label { color: #94a3b8; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
+    .gkpi-value { font-size: 1.6rem; font-weight: 700; }
+    .gkpi-sub { color: #94a3b8; font-size: 0.8rem; margin-top: 6px; }
+    /* CHART */
+    .chart-section { background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 24px; margin-bottom: 32px; }
+    .chart-section h2 { color: #60a5fa; font-size: 1.1rem; margin-bottom: 20px; }
+    .chart-tabs { display: flex; gap: 8px; margin-bottom: 16px; }
+    .chart-tab { padding: 6px 16px; border-radius: 20px; border: 1px solid #334155; background: transparent; color: #94a3b8; cursor: pointer; font-size: 0.85rem; transition: all 0.2s; }
+    .chart-tab.active { background: #3b82f6; border-color: #3b82f6; color: white; }
+    /* MONTHS GRID */
+    .months-section h2 { color: #60a5fa; font-size: 1.1rem; margin-bottom: 16px; }
+    .months-grid { display: grid; grid-template-columns: repeat(3,1fr); gap: 16px; margin-bottom: 32px; }
+    .month-card { background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 20px; cursor: pointer; transition: all 0.2s; }
+    .month-card:hover { border-color: #3b82f6; background: #1e3a5f; transform: translateY(-2px); }
+    .month-title { color: #60a5fa; font-size: 1rem; font-weight: 700; margin-bottom: 12px; }
+    .month-stat { display: flex; justify-content: space-between; align-items: center; padding: 4px 0; font-size: 0.85rem; color: #94a3b8; }
+    .month-stat.saldo { border-top: 1px solid #334155; margin-top: 8px; padding-top: 8px; }
+    .pos { color: #4ade80; font-weight: 600; }
+    .neg { color: #f87171; font-weight: 600; }
+    /* DETAIL */
+    .month-detail { background: #1e293b; border: 1px solid #334155; border-radius: 12px; padding: 24px; margin-bottom: 24px; }
+    .detail-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+    .btn-close { background: #334155; border: none; color: #94a3b8; padding: 8px 16px; border-radius: 8px; cursor: pointer; font-size: 0.85rem; }
+    .btn-close:hover { background: #475569; color: white; }
+    .kpi-row { display: grid; grid-template-columns: repeat(3,1fr); gap: 12px; margin-bottom: 20px; }
+    .kpi-card { background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px; }
+    .kpi-label { color: #94a3b8; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 6px; }
+    .kpi-value { font-size: 1.2rem; font-weight: 700; margin-bottom: 4px; }
+    .kpi-sub { color: #64748b; font-size: 0.75rem; }
+    .tables-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 16px; }
+    .table-card { background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px; }
+    .ind-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+    .ind-card { background: #0f172a; border: 1px solid #334155; border-radius: 8px; padding: 16px; }
+    .ind-card h4 { color: #94a3b8; font-size: 0.8rem; text-transform: uppercase; margin-bottom: 10px; }
+    .ind-badge { display: inline-block; padding: 4px 10px; border-radius: 12px; font-size: 0.8rem; font-weight: 600; margin: 3px; }
+    .ind-badge.green { background: rgba(74,222,128,0.15); color: #4ade80; border: 1px solid rgba(74,222,128,0.3); }
+    .ind-badge.yellow { background: rgba(251,191,36,0.15); color: #fbbf24; border: 1px solid rgba(251,191,36,0.3); }
+    .ind-badge.red { background: rgba(248,113,113,0.15); color: #f87171; border: 1px solid rgba(248,113,113,0.3); }
+    .ind-badge.blue { background: rgba(96,165,250,0.15); color: #60a5fa; border: 1px solid rgba(96,165,250,0.3); }
+    .footer { text-align: center; color: #475569; font-size: 0.8rem; padding: 32px; border-top: 1px solid #1e293b; }
+    @media (max-width: 768px) {
+      .months-grid, .global-kpis { grid-template-columns: 1fr; }
+      .kpi-row, .tables-row, .ind-row { grid-template-columns: 1fr; }
+      .main { padding: 16px; }
+      .header { padding: 16px; flex-direction: column; gap: 8px; text-align: center; }
     }
-
-    /* DASHBOARD STYLES */
-    header { background: linear-gradient(135deg, #1e3a5f 0%, #0f172a 100%); padding: 24px 32px; border-bottom: 1px solid #334155; }
-    header h1 { font-size: 1.8rem; font-weight: 700; color: #60a5fa; }
-    header p { color: #94a3b8; font-size: 0.95rem; margin-top: 4px; }
-    .container { max-width: 1400px; margin: 0 auto; padding: 32px 24px; }
-    .kpi-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 20px; margin-bottom: 36px; }
-    .kpi-card { background: #1e293b; border-radius: 12px; padding: 20px; border: 1px solid #334155; position: relative; overflow: hidden; }
-    .kpi-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 3px; }
-    .kpi-card.receita::before { background: linear-gradient(90deg, #10b981, #34d399); }
-    .kpi-card.despesa::before { background: linear-gradient(90deg, #ef4444, #f87171); }
-    .kpi-card.resultado::before { background: linear-gradient(90deg, #3b82f6, #60a5fa); }
-    .kpi-card.saldo::before { background: linear-gradient(90deg, #f59e0b, #fbbf24); }
-    .kpi-card.pendente::before { background: linear-gradient(90deg, #8b5cf6, #a78bfa); }
-    .kpi-card.atrasado::before { background: linear-gradient(90deg, #dc2626, #ef4444); }
-    .kpi-label { font-size: 0.78rem; color: #94a3b8; text-transform: uppercase; letter-spacing: 0.05em; margin-bottom: 8px; }
-    .kpi-value { font-size: 1.6rem; font-weight: 700; color: #f1f5f9; }
-    .kpi-value.positive { color: #34d399; }
-    .kpi-value.negative { color: #f87171; }
-    .kpi-value.warning { color: #fbbf24; }
-    .kpi-sub { font-size: 0.78rem; color: #64748b; margin-top: 6px; }
-    .charts-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; margin-bottom: 36px; }
-    .chart-card { background: #1e293b; border-radius: 12px; padding: 24px; border: 1px solid #334155; }
-    .chart-card.full-width { grid-column: 1 / -1; }
-    .chart-title { font-size: 1rem; font-weight: 600; color: #cbd5e1; margin-bottom: 20px; border-bottom: 1px solid #334155; padding-bottom: 12px; }
-    .chart-container { position: relative; height: 280px; }
-    .chart-container.tall { height: 380px; }
-    .table-card { background: #1e293b; border-radius: 12px; padding: 24px; border: 1px solid #334155; margin-bottom: 24px; }
-    .table-title { font-size: 1rem; font-weight: 600; color: #cbd5e1; margin-bottom: 16px; }
-    table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
-    th { background: #0f172a; color: #94a3b8; padding: 10px 12px; text-align: left; font-weight: 600; text-transform: uppercase; font-size: 0.72rem; letter-spacing: 0.05em; }
-    td { padding: 10px 12px; border-bottom: 1px solid #1e293b; color: #cbd5e1; }
-    tr:last-child td { border-bottom: none; }
-    tr:hover td { background: #1e3a5f22; }
-    .badge { display: inline-block; padding: 2px 8px; border-radius: 20px; font-size: 0.72rem; font-weight: 600; }
-    .badge-green { background: #064e3b; color: #34d399; }
-    .badge-red { background: #450a0a; color: #f87171; }
-    .badge-yellow { background: #451a03; color: #fbbf24; }
-    .badge-blue { background: #1e3a5f; color: #60a5fa; }
-    .tag-receita { color: #34d399; }
-    .tag-despesa { color: #f87171; }
-    .progress-bar { background: #0f172a; border-radius: 6px; height: 8px; overflow: hidden; margin-top: 8px; }
-    .progress-fill { height: 100%; border-radius: 6px; }
-    footer { text-align: center; padding: 24px; color: #475569; font-size: 0.8rem; border-top: 1px solid #1e293b; margin-top: 24px; }
-    @media (max-width: 768px) { .charts-grid { grid-template-columns: 1fr; } .kpi-grid { grid-template-columns: repeat(2, 1fr); } }
   </style>
 </head>
 <body>
-
   <!-- PASSWORD OVERLAY -->
   <div id="pw-overlay">
     <div id="pw-box">
-      <div class="lock-icon">🔐</div>
-      <h2>Dashboard Financeiro</h2>
-      <p>Projuris ADV · Junho 2026<br>Digite a senha para acessar</p>
-      <input type="password" id="pw-input" placeholder="••••••••" autocomplete="off" />
-      <button id="pw-btn" onclick="checkPassword()">Entrar</button>
-      <div id="pw-error"></div>
+      <div class="lock-icon">🔒</div>
+      <h2>Dashboard Projuris ADV</h2>
+      <p>Acesso restrito. Digite a senha para continuar.</p>
+      <input type="password" id="pw-input" placeholder="Senha" onkeydown="if(event.key==='Enter')checkPw()" autofocus>
+      <button id="pw-btn" onclick="checkPw()">Entrar</button>
+      <div id="pw-error">Senha incorreta. Tente novamente.</div>
     </div>
   </div>
 
-  <!-- DASHBOARD (hidden until password is correct) -->
-  <div id="dashboard">
-    <header>
-      <h1>📊 Dashboard Financeiro — Junho 2026</h1>
-      <p>Projuris ADV · Análise de Receitas e Despesas · Período: 01/06/2026 a 30/06/2026</p>
-    </header>
-    <div class="container">
-      <div class="kpi-grid">
-        <div class="kpi-card receita">
-          <div class="kpi-label">Total Receitas</div>
-          <div class="kpi-value positive">R$ 358.833,83</div>
-          <div class="kpi-sub">211 lançamentos</div>
-          <div class="progress-bar"><div class="progress-fill" style="width:70%;background:linear-gradient(90deg,#10b981,#34d399)"></div></div>
-        </div>
-        <div class="kpi-card despesa">
-          <div class="kpi-label">Total Despesas</div>
-          <div class="kpi-value negative">R$ 151.062,92</div>
-          <div class="kpi-sub">58 lançamentos</div>
-          <div class="progress-bar"><div class="progress-fill" style="width:30%;background:linear-gradient(90deg,#ef4444,#f87171)"></div></div>
-        </div>
-        <div class="kpi-card resultado">
-          <div class="kpi-label">Resultado Projetado</div>
-          <div class="kpi-value positive">R$ 207.770,91</div>
-          <div class="kpi-sub">Receitas − Despesas projetadas</div>
-        </div>
-        <div class="kpi-card saldo">
-          <div class="kpi-label">Saldo Realizado</div>
-          <div class="kpi-value negative">− R$ 52.517,15</div>
-          <div class="kpi-sub">Recebido − Pago efetivamente</div>
-        </div>
-        <div class="kpi-card pendente">
-          <div class="kpi-label">Receitas Pendentes</div>
-          <div class="kpi-value warning">R$ 305.013,68</div>
-          <div class="kpi-sub">170 lançamentos pendentes</div>
-        </div>
-        <div class="kpi-card atrasado">
-          <div class="kpi-label">Receitas Atrasadas</div>
-          <div class="kpi-value negative">26 lançamentos</div>
-          <div class="kpi-sub">Vencimento ultrapassado</div>
-        </div>
+  <!-- MAIN CONTENT -->
+  <div id="main-content" style="display:none;">
+    <div class="header">
+      <div>
+        <h1>📊 Dashboard Financeiro 2026</h1>
+        <div class="header-sub">Receitas e Despesas | Projuris ADV | Jan–Jun 2026</div>
       </div>
-
-      <div class="charts-grid">
-        <div class="chart-card">
-          <div class="chart-title">🟢 Receitas por Situação</div>
-          <div class="chart-container"><canvas id="chartReceitaSit"></canvas></div>
-        </div>
-        <div class="chart-card">
-          <div class="chart-title">🔴 Despesas por Situação</div>
-          <div class="chart-container"><canvas id="chartDespesaSit"></canvas></div>
-        </div>
-        <div class="chart-card full-width">
-          <div class="chart-title">⚖️ Comparativo: Receitas vs Despesas (Realizado x Projetado)</div>
-          <div class="chart-container"><canvas id="chartComparativo"></canvas></div>
-        </div>
-      </div>
-
-      <div class="charts-grid">
-        <div class="chart-card">
-          <div class="chart-title">📂 Top 8 Receitas por Plano de Contas</div>
-          <div class="chart-container tall"><canvas id="chartReceitaPlano"></canvas></div>
-        </div>
-        <div class="chart-card">
-          <div class="chart-title">📂 Top 8 Despesas por Plano de Contas</div>
-          <div class="chart-container tall"><canvas id="chartDespesaPlano"></canvas></div>
-        </div>
-      </div>
-
-      <div class="table-card">
-        <div class="table-title">📋 Receitas por Plano de Contas — Junho 2026</div>
-        <table>
-          <thead><tr><th>Plano de Contas</th><th>Lançamentos</th><th>Total (R$)</th><th>Recebido (R$)</th><th>Pendente (R$)</th><th>Status</th></tr></thead>
-          <tbody id="tbReceitas"></tbody>
-        </table>
-      </div>
-
-      <div class="table-card">
-        <div class="table-title">📋 Despesas por Plano de Contas — Junho 2026</div>
-        <table>
-          <thead><tr><th>Plano de Contas</th><th>Lançamentos</th><th>Total (R$)</th><th>Pago (R$)</th><th>Pendente (R$)</th><th>Status</th></tr></thead>
-          <tbody id="tbDespesas"></tbody>
-        </table>
-      </div>
+      <div class="header-badge">Atualizado em 09/06/2026</div>
     </div>
-    <footer>Dashboard gerado automaticamente · Projuris ADV · Junho 2026 · Dados coletados em 09/06/2026</footer>
+    <div class="main">
+      <!-- GLOBAL KPIs -->
+      <div class="global-kpis">
+        <div class="gkpi"><div class="gkpi-label">Total Receitas (Jan–Jun)</div><div class="gkpi-value pos">R$ 2.446.033,35</div><div class="gkpi-sub">6 meses consolidados</div></div>
+        <div class="gkpi"><div class="gkpi-label">Total Despesas (Jan–Jun)</div><div class="gkpi-value neg">R$ 1.714.649,63</div><div class="gkpi-sub">6 meses consolidados</div></div>
+        <div class="gkpi"><div class="gkpi-label">Saldo Acumulado</div><div class="gkpi-value" style="color:#4ade80;">R$ 731.383,72</div><div class="gkpi-sub">Resultado Jan–Jun 2026</div></div>
+      </div>
+      <!-- CHART -->
+      <div class="chart-section">
+        <h2>Evolução Mensal – Jan a Jun 2026</h2>
+        <div class="chart-tabs">
+          <button class="chart-tab active" onclick="showChart('bar', this)">Receitas vs Despesas</button>
+          <button class="chart-tab" onclick="showChart('saldo', this)">Saldo Mensal</button>
+        </div>
+        <canvas id="chartMain" height="100"></canvas>
+        <canvas id="chartSaldo" height="100" style="display:none;"></canvas>
+      </div>
+      <!-- MONTH CARDS -->
+      <div class="months-section">
+        <h2>📅 Clique em um mês para ver o detalhamento</h2>
+        <div class="months-grid"><div class="month-card" onclick="showMonth('Janeiro')" id="card-Janeiro"><div class="month-title">Janeiro 2026</div><div class="month-stat"><span>Receitas</span><span class="pos">R$ 259.128,20</span></div><div class="month-stat"><span>Despesas</span><span class="neg">R$ 81.017,80</span></div><div class="month-stat saldo"><span>Saldo</span><span style="color:#4ade80;font-weight:700;">R$ 178.110,40</span></div></div><div class="month-card" onclick="showMonth('Fevereiro')" id="card-Fevereiro"><div class="month-title">Fevereiro 2026</div><div class="month-stat"><span>Receitas</span><span class="pos">R$ 595.231,60</span></div><div class="month-stat"><span>Despesas</span><span class="neg">R$ 309.045,84</span></div><div class="month-stat saldo"><span>Saldo</span><span style="color:#4ade80;font-weight:700;">R$ 286.185,76</span></div></div><div class="month-card" onclick="showMonth('Março')" id="card-Março"><div class="month-title">Março 2026</div><div class="month-stat"><span>Receitas</span><span class="pos">R$ 328.050,78</span></div><div class="month-stat"><span>Despesas</span><span class="neg">R$ 103.806,75</span></div><div class="month-stat saldo"><span>Saldo</span><span style="color:#4ade80;font-weight:700;">R$ 224.244,03</span></div></div><div class="month-card" onclick="showMonth('Abril')" id="card-Abril"><div class="month-title">Abril 2026</div><div class="month-stat"><span>Receitas</span><span class="pos">R$ 425.444,34</span></div><div class="month-stat"><span>Despesas</span><span class="neg">R$ 607.563,83</span></div><div class="month-stat saldo"><span>Saldo</span><span style="color:#f87171;font-weight:700;">R$ -182.119,49</span></div></div><div class="month-card" onclick="showMonth('Maio')" id="card-Maio"><div class="month-title">Maio 2026</div><div class="month-stat"><span>Receitas</span><span class="pos">R$ 554.354,44</span></div><div class="month-stat"><span>Despesas</span><span class="neg">R$ 485.146,65</span></div><div class="month-stat saldo"><span>Saldo</span><span style="color:#4ade80;font-weight:700;">R$ 69.207,79</span></div></div><div class="month-card" onclick="showMonth('Junho')" id="card-Junho"><div class="month-title">Junho 2026</div><div class="month-stat"><span>Receitas</span><span class="pos">R$ 283.823,99</span></div><div class="month-stat"><span>Despesas</span><span class="neg">R$ 128.068,76</span></div><div class="month-stat saldo"><span>Saldo</span><span style="color:#4ade80;font-weight:700;">R$ 155.755,23</span></div></div></div>
+      </div>
+      <!-- DETAIL SECTIONS -->
+      <div id="details-container"><div class="month-detail" id="detail-Janeiro" style="display:none;"><div class="detail-header"><h2 style="color:#60a5fa;font-size:1.4rem;">Janeiro 2026</h2><button onclick="hideDetail()" class="btn-close">✕ Fechar</button></div><div class="kpi-row"><div class="kpi-card"><div class="kpi-label">Total Receitas</div><div class="kpi-value pos">R$ 259.128,20</div><div class="kpi-sub">173 lanç. | Realizado: R$ 241.657,17</div></div><div class="kpi-card"><div class="kpi-label">Total Despesas</div><div class="kpi-value neg">R$ 81.017,80</div><div class="kpi-sub">51 lanç. | Realizado: R$ 73.787,80</div></div><div class="kpi-card"><div class="kpi-label">Saldo do Mês</div><div class="kpi-value" style="color:#4ade80;">R$ 178.110,40</div><div class="kpi-sub">Pendente Rec: R$ 17.471,03</div></div></div><div class="tables-row"><div class="table-card"><h3 style="color:#60a5fa;margin-bottom:10px;">Receitas por Plano</h3><table width="100%"><tr><td style="color:#94a3b8;padding:6px 8px;font-size:0.85rem;">Honorários mensais</td><td style="color:#4ade80;padding:6px 8px;text-align:right;font-weight:600;font-size:0.85rem;">R$ 126.109,47</td></tr><tr><td style="color:#94a3b8;padding:6px 8px;font-size:0.85rem;">Acordo Trabalhista</td><td style="color:#4ade80;padding:6px 8px;text-align:right;font-weight:600;font-size:0.85rem;">R$ 90.759,25</td></tr><tr><td style="color:#94a3b8;padding:6px 8px;font-size:0.85rem;">Honorários Cível</td><td style="color:#4ade80;padding:6px 8px;text-align:right;font-weight:600;font-size:0.85rem;">R$ 18.877,37</td></tr><tr><td style="color:#94a3b8;padding:6px 8px;font-size:0.85rem;">Honorários contratuais</td><td style="color:#4ade80;padding:6px 8px;text-align:right;font-weight:600;font-size:0.85rem;">R$ 16.831,57</td></tr><tr><td style="color:#94a3b8;padding:6px 8px;font-size:0.85rem;">Honorários Previdenciários</td><td style="color:#4ade80;padding:6px 8px;text-align:right;font-weight:600;font-size:0.85rem;">R$ 3.712,41</td></tr><tr><td style="color:#94a3b8;padding:6px 8px;font-size:0.85rem;">Honorários Trabalhista</td><td style="color:#4ade80;padding:6px 8px;text-align:right;font-weight:600;font-size:0.85rem;">R$ 2.561,26</td></tr><tr><td style="color:#94a3b8;padding:6px 8px;font-size:0.85rem;">Reembolso de Clientes</td><td style="color:#4ade80;padding:6px 8px;text-align:right;font-weight:600;font-size:0.85rem;">R$ 276,87</td></tr></table></div><div class="table-card"><h3 style="color:#f87171;margin-bottom:10px;">Despesas por Plano</h3><table width="100%"><tr><td style="color:#94a3b8;padding:6px 8px;font-size:0.85rem;">Processuais</td><td style="color:#f87171;padding:6px 8px;text-align:right;font-weight:600;font-size:0.85rem;">R$ 63.286,71</td></tr><tr><td style="color:#94a3b8;padding:6px 8px;font-size:0.85rem;">Administrativas</td><td style="color:#f87171;padding:6px 8px;text-align:right;font-weight:600;font-size:0.85rem;">R$ 12.133,37</td></tr><tr><td style="color:#94a3b8;padding:6px 8px;font-size:0.85rem;">Repasse</td><td style="color:#f87171;padding:6px 8px;text-align:right;font-weight:600;font-size:0.85rem;">R$ 4.900,00</td></tr><tr><td style="color:#94a3b8;padding:6px 8px;font-size:0.85rem;">Comissão por Indicação</td><td style="color:#f87171;padding:6px 8px;text-align:right;font-weight:600;font-size:0.85rem;">R$ 697,72</td></tr></table></div></div><div class="ind-row"><div class="ind-card"><h4>Indicadores de Receitas</h4><span class="ind-badge green">Baixados: 148</span><span class="ind-badge yellow">Pendentes: 25</span><span class="ind-badge red">Atrasados: 25</span><span class="ind-badge blue">Total: 173</span></div><div class="ind-card"><h4>Indicadores de Despesas</h4><span class="ind-badge green">Baixados: 47</span><span class="ind-badge yellow">Pendentes: 4</span><span class="ind-badge red">Atrasados: 4</span><span class="ind-badge blue">Total: 51</span></div></div></div><div class="month-detail" id="detail-Fevereiro" style="display:none;"><div class="detail-header"><h2 style="color:#60a5fa;font-size:1.4rem;">Fevereiro 2026</h2><button onclick="hideDetail()" class="btn-close">✕ Fechar</button></div><div class="kpi-row"><div class="kpi-card"><div class="kpi-label">Total Receitas</div><div class="kpi-value pos">R$ 595.231,60</div><div class="kpi-sub">195 lanç. | Realizado: R$ 570.287,90</div></div><div class="kpi-card"><div class="kpi-label">Total Despesas</div><div class="kpi-value neg">R$ 309.045,84</div><div class="kpi-sub">55 lanç. | Realizado: R$ 303.532,92</div></div><div class="kpi-card"><div class="kpi-label">Saldo do Mês</div><div class="kpi-value" style="color:#4ade80;">R$ 286.185,76</div><div class="kpi-sub">Pendente Rec: R$ 24.943,70</div></div></div><div class="tables-row"><div class="table-card"><h3 style="color:#60a5fa;margin-bottom:10px;">Receitas por Plano</h3><table width="100%"><tr><td style="color:#94a3b8;padding:6px 8px;font-size:0.85rem;">Honorários Trabalhista</td><td style="color:#4ade80;padding:6px 8px;text-align:right;font-weight:600;font-size:0.85rem;">R$ 329.804,59</td></tr><tr><td style="color:#94a3b8;padding:6px 8px;font-size:0.85rem;">Honorários mensais</td><td style="color:#4ade80;padding:6px 8px;text-align:right;font-weight:600;font-size:0.85rem;">R$ 121.890,08</td></tr><tr><td style="color:#94a3b8;padding:6px 8px;font-size:0.85rem;">Acordo Trabalhista</td><td style="color:#4ade80;padding:6px 8px;text-align:right;font-weight:600;font-size:0.85rem;">R$ 93.936,45</td></tr><tr><td style="color:#94a3b8;padding:6px 8px;font-size:0.85rem;">Honorários Cível</td><td style="color:#4ade80;padding:6px 8px;text-align:right;font-weight:600;font-size:0.85rem;">R$ 21.405,46</td></tr><tr><td style="color:#94a3b8;padding:6px 8px;font-size:0.85rem;">Honorários contratuais</td><td style="color:#4ade80;padding:6px 8px;text-align:right;font-weight:600;font-size:0.85rem;">R$ 19.101,51</td></tr><tr><td style="color:#94a3b8;padding:6px 8px;font-size:0.85rem;">Honorários Previdenciários</td><td style="color:#4ade80;padding:6px 8px;text-align:right;font-weight:600;font-size:0.85rem;">R$ 8.389,42</td></tr><tr><td style="color:#94a3b8;padding:6px 8px;font-size:0.85rem;">Reembolso de Clientes</td><td style="color:#4ade80;padding:6px 8px;text-align:right;font-weight:600;font-size:0.85rem;">R$ 704,09</td></tr></table></div><div class="table-card"><h3 style="color:#f87171;margin-bottom:10px;">Despesas por Plano</h3><table width="100%"><tr><td style="color:#94a3b8;padding:6px 8px;font-size:0.85rem;">Processuais</td><td style="color:#f87171;padding:6px 8px;text-align:right;font-weight:600;font-size:0.85rem;">R$ 290.779,07</td></tr><tr><td style="color:#94a3b8;padding:6px 8px;font-size:0.85rem;">Administrativas</td><td style="color:#f87171;padding:6px 8px;text-align:right;font-weight:600;font-size:0.85rem;">R$ 13.897,68</td></tr><tr><td style="color:#94a3b8;padding:6px 8px;font-size:0.85rem;">Repasse</td><td style="color:#f87171;padding:6px 8px;text-align:right;font-weight:600;font-size:0.85rem;">R$ 3.500,00</td></tr><tr><td style="color:#94a3b8;padding:6px 8px;font-size:0.85rem;">Comissão por Indicação</td><td style="color:#f87171;padding:6px 8px;text-align:right;font-weight:600;font-size:0.85rem;">R$ 869,09</td></tr></table></div></div><div class="ind-row"><div class="ind-card"><h4>Indicadores de Receitas</h4><span class="ind-badge green">Baixados: 162</span><span class="ind-badge yellow">Pendentes: 33</span><span class="ind-badge red">Atrasados: 33</span><span class="ind-badge blue">Total: 195</span></div><div class="ind-card"><h4>Indicadores de Despesas</h4><span class="ind-badge green">Baixados: 51</span><span class="ind-badge yellow">Pendentes: 4</span><span class="ind-badge red">Atrasados: 4</span><span class="ind-badge blue">Total: 55</span></div></div></div><div class="month-detail" id="detail-Março" style="display:none;"><div class="detail-header"><h2 style="color:#60a5fa;font-size:1.4rem;">Março 2026</h2><button onclick="hideDetail()" class="btn-close">✕ Fechar</button></div><div class="kpi-row"><div class="kpi-card"><div class="kpi-label">Total Receitas</div><div class="kpi-value pos">R$ 328.050,78</div><div class="kpi-sub">192 lanç. | Realizado: R$ 307.348,01</div></div><div class="kpi-card"><div class="kpi-label">Total Despesas</div><div class="kpi-value neg">R$ 103.806,75</div><div class="kpi-sub">92 lanç. | Realizado: R$ 96.157,11</div></div><div class="kpi-card"><div class="kpi-label">Saldo do Mês</div><div class="kpi-value" style="color:#4ade80;">R$ 224.244,03</div><div class="kpi-sub">Pendente Rec: R$ 20.702,77</div></div></div><div class="tables-row"><div class="table-card"><h3 style="color:#60a5fa;margin-bottom:10px;">Receitas por Plano</h3><table width="100%"><tr><td style="color:#94a3b8;padding:6px 8px;font-size:0.85rem;">Acordo Trabalhista</td><td style="color:#4ade80;padding:6px 8px;text-align:right;font-weight:600;font-size:0.85rem;">R$ 147.269,85</td></tr><tr><td style="color:#94a3b8;padding:6px 8px;font-size:0.85rem;">Honorários mensais</td><td style="color:#4ade80;padding:6px 8px;text-align:right;font-weight:600;font-size:0.85rem;">R$ 134.953,26</td></tr><tr><td style="color:#94a3b8;padding:6px 8px;font-size:0.85rem;">Honorários Cível</td><td style="color:#4ade80;padding:6px 8px;text-align:right;font-weight:600;font-size:0.85rem;">R$ 24.437,19</td></tr><tr><td style="color:#94a3b8;padding:6px 8px;font-size:0.85rem;">Honorários contratuais</td><td style="color:#4ade80;padding:6px 8px;text-align:right;font-weight:600;font-size:0.85rem;">R$ 14.067,76</td></tr><tr><td style="color:#94a3b8;padding:6px 8px;font-size:0.85rem;">Honorários Previdenciários</td><td style="color:#4ade80;padding:6px 8px;text-align:right;font-weight:600;font-size:0.85rem;">R$ 5.479,23</td></tr><tr><td style="color:#94a3b8;padding:6px 8px;font-size:0.85rem;">Honorários Trabalhista</td><td style="color:#4ade80;padding:6px 8px;text-align:right;font-weight:600;font-size:0.85rem;">R$ 1.643,49</td></tr><tr><td style="color:#94a3b8;padding:6px 8px;font-size:0.85rem;">Reembolso de Clientes</td><td style="color:#4ade80;padding:6px 8px;text-align:right;font-weight:600;font-size:0.85rem;">R$ 200,00</td></tr></table></div><div class="table-card"><h3 style="color:#f87171;margin-bottom:10px;">Despesas por Plano</h3><table width="100%"><tr><td style="color:#94a3b8;padding:6px 8px;font-size:0.85rem;">Processuais</td><td style="color:#f87171;padding:6px 8px;text-align:right;font-weight:600;font-size:0.85rem;">R$ 76.615,53</td></tr><tr><td style="color:#94a3b8;padding:6px 8px;font-size:0.85rem;">Administrativas</td><td style="color:#f87171;padding:6px 8px;text-align:right;font-weight:600;font-size:0.85rem;">R$ 15.291,99</td></tr><tr><td style="color:#94a3b8;padding:6px 8px;font-size:0.85rem;">Cartão de Crédito - Assaí</td><td style="color:#f87171;padding:6px 8px;text-align:right;font-weight:600;font-size:0.85rem;">R$ 5.511,01</td></tr><tr><td style="color:#94a3b8;padding:6px 8px;font-size:0.85rem;">Repasse</td><td style="color:#f87171;padding:6px 8px;text-align:right;font-weight:600;font-size:0.85rem;">R$ 3.500,00</td></tr><tr><td style="color:#94a3b8;padding:6px 8px;font-size:0.85rem;">Cartão de Crédito - Uniclass</td><td style="color:#f87171;padding:6px 8px;text-align:right;font-weight:600;font-size:0.85rem;">R$ 1.923,55</td></tr><tr><td style="color:#94a3b8;padding:6px 8px;font-size:0.85rem;">Comissão por Indicação</td><td style="color:#f87171;padding:6px 8px;text-align:right;font-weight:600;font-size:0.85rem;">R$ 819,11</td></tr><tr><td style="color:#94a3b8;padding:6px 8px;font-size:0.85rem;">IPTU</td><td style="color:#f87171;padding:6px 8px;text-align:right;font-weight:600;font-size:0.85rem;">R$ 145,57</td></tr></table></div></div><div class="ind-row"><div class="ind-card"><h4>Indicadores de Receitas</h4><span class="ind-badge green">Baixados: 162</span><span class="ind-badge yellow">Pendentes: 30</span><span class="ind-badge red">Atrasados: 30</span><span class="ind-badge blue">Total: 192</span></div><div class="ind-card"><h4>Indicadores de Despesas</h4><span class="ind-badge green">Baixados: 82</span><span class="ind-badge yellow">Pendentes: 10</span><span class="ind-badge red">Atrasados: 10</span><span class="ind-badge blue">Total: 92</span></div></div></div><div class="month-detail" id="detail-Abril" style="display:none;"><div class="detail-header"><h2 style="color:#60a5fa;font-size:1.4rem;">Abril 2026</h2><button onclick="hideDetail()" class="btn-close">✕ Fechar</button></div><div class="kpi-row"><div class="kpi-card"><div class="kpi-label">Total Receitas</div><div class="kpi-value pos">R$ 425.444,34</div><div class="kpi-sub">235 lanç. | Realizado: R$ 389.830,15</div></div><div class="kpi-card"><div class="kpi-label">Total Despesas</div><div class="kpi-value neg">R$ 607.563,83</div><div class="kpi-sub">278 lanç. | Realizado: R$ 595.627,30</div></div><div class="kpi-card"><div class="kpi-label">Saldo do Mês</div><div class="kpi-value" style="color:#f87171;">R$ -182.119,49</div><div class="kpi-sub">Pendente Rec: R$ 35.614,19</div></div></div><div class="tables-row"><div class="table-card"><h3 style="color:#60a5fa;margin-bottom:10px;">Receitas por Plano</h3><table width="100%"><tr><td style="color:#94a3b8;padding:6px 8px;font-size:0.85rem;">Honorários mensais</td><td style="color:#4ade80;padding:6px 8px;text-align:right;font-weight:600;font-size:0.85rem;">R$ 140.040,32</td></tr><tr><td style="color:#94a3b8;padding:6px 8px;font-size:0.85rem;">Acordo Trabalhista</td><td style="color:#4ade80;padding:6px 8px;text-align:right;font-weight:600;font-size:0.85rem;">R$ 121.124,44</td></tr><tr><td style="color:#94a3b8;padding:6px 8px;font-size:0.85rem;">Receita Sem Identificação</td><td style="color:#4ade80;padding:6px 8px;text-align:right;font-weight:600;font-size:0.85rem;">R$ 82.886,22</td></tr><tr><td style="color:#94a3b8;padding:6px 8px;font-size:0.85rem;">Honorários Cível</td><td style="color:#4ade80;padding:6px 8px;text-align:right;font-weight:600;font-size:0.85rem;">R$ 34.271,80</td></tr><tr><td style="color:#94a3b8;padding:6px 8px;font-size:0.85rem;">Honorários contratuais</td><td style="color:#4ade80;padding:6px 8px;text-align:right;font-weight:600;font-size:0.85rem;">R$ 21.867,76</td></tr><tr><td style="color:#94a3b8;padding:6px 8px;font-size:0.85rem;">Honorários Previdenciários</td><td style="color:#4ade80;padding:6px 8px;text-align:right;font-weight:600;font-size:0.85rem;">R$ 16.664,92</td></tr><tr><td style="color:#94a3b8;padding:6px 8px;font-size:0.85rem;">Honorários Trabalhista</td><td style="color:#4ade80;padding:6px 8px;text-align:right;font-weight:600;font-size:0.85rem;">R$ 8.274,94</td></tr><tr><td style="color:#94a3b8;padding:6px 8px;font-size:0.85rem;">Reembolso de Clientes</td><td style="color:#4ade80;padding:6px 8px;text-align:right;font-weight:600;font-size:0.85rem;">R$ 200,00</td></tr></table></div><div class="table-card"><h3 style="color:#f87171;margin-bottom:10px;">Despesas por Plano</h3><table width="100%"><tr><td style="color:#94a3b8;padding:6px 8px;font-size:0.85rem;">Despesas Particulares</td><td style="color:#f87171;padding:6px 8px;text-align:right;font-weight:600;font-size:0.85rem;">R$ 179.110,76</td></tr><tr><td style="color:#94a3b8;padding:6px 8px;font-size:0.85rem;">Salário</td><td style="color:#f87171;padding:6px 8px;text-align:right;font-weight:600;font-size:0.85rem;">R$ 96.603,00</td></tr><tr><td style="color:#94a3b8;padding:6px 8px;font-size:0.85rem;">Repasse</td><td style="color:#f87171;padding:6px 8px;text-align:right;font-weight:600;font-size:0.85rem;">R$ 82.808,57</td></tr><tr><td style="color:#94a3b8;padding:6px 8px;font-size:0.85rem;">Rescisão</td><td style="color:#f87171;padding:6px 8px;text-align:right;font-weight:600;font-size:0.85rem;">R$ 81.536,69</td></tr><tr><td style="color:#94a3b8;padding:6px 8px;font-size:0.85rem;">Processuais</td><td style="color:#f87171;padding:6px 8px;text-align:right;font-weight:600;font-size:0.85rem;">R$ 45.754,01</td></tr><tr><td style="color:#94a3b8;padding:6px 8px;font-size:0.85rem;">Vale Refeição</td><td style="color:#f87171;padding:6px 8px;text-align:right;font-weight:600;font-size:0.85rem;">R$ 15.865,88</td></tr><tr><td style="color:#94a3b8;padding:6px 8px;font-size:0.85rem;">IR Previdenciário</td><td style="color:#f87171;padding:6px 8px;text-align:right;font-weight:600;font-size:0.85rem;">R$ 14.342,13</td></tr><tr><td style="color:#94a3b8;padding:6px 8px;font-size:0.85rem;">Administrativas</td><td style="color:#f87171;padding:6px 8px;text-align:right;font-weight:600;font-size:0.85rem;">R$ 13.612,30</td></tr></table></div></div><div class="ind-row"><div class="ind-card"><h4>Indicadores de Receitas</h4><span class="ind-badge green">Baixados: 181</span><span class="ind-badge yellow">Pendentes: 54</span><span class="ind-badge red">Atrasados: 54</span><span class="ind-badge blue">Total: 235</span></div><div class="ind-card"><h4>Indicadores de Despesas</h4><span class="ind-badge green">Baixados: 265</span><span class="ind-badge yellow">Pendentes: 13</span><span class="ind-badge red">Atrasados: 13</span><span class="ind-badge blue">Total: 278</span></div></div></div><div class="month-detail" id="detail-Maio" style="display:none;"><div class="detail-header"><h2 style="color:#60a5fa;font-size:1.4rem;">Maio 2026</h2><button onclick="hideDetail()" class="btn-close">✕ Fechar</button></div><div class="kpi-row"><div class="kpi-card"><div class="kpi-label">Total Receitas</div><div class="kpi-value pos">R$ 554.354,44</div><div class="kpi-sub">235 lanç. | Realizado: R$ 514.537,69</div></div><div class="kpi-card"><div class="kpi-label">Total Despesas</div><div class="kpi-value neg">R$ 485.146,65</div><div class="kpi-sub">210 lanç. | Realizado: R$ 473.843,28</div></div><div class="kpi-card"><div class="kpi-label">Saldo do Mês</div><div class="kpi-value" style="color:#4ade80;">R$ 69.207,79</div><div class="kpi-sub">Pendente Rec: R$ 39.816,75</div></div></div><div class="tables-row"><div class="table-card"><h3 style="color:#60a5fa;margin-bottom:10px;">Receitas por Plano</h3><table width="100%"><tr><td style="color:#94a3b8;padding:6px 8px;font-size:0.85rem;">Acordo Trabalhista</td><td style="color:#4ade80;padding:6px 8px;text-align:right;font-weight:600;font-size:0.85rem;">R$ 178.055,20</td></tr><tr><td style="color:#94a3b8;padding:6px 8px;font-size:0.85rem;">Honorários Previdenciários</td><td style="color:#4ade80;padding:6px 8px;text-align:right;font-weight:600;font-size:0.85rem;">R$ 167.490,68</td></tr><tr><td style="color:#94a3b8;padding:6px 8px;font-size:0.85rem;">Honorários mensais</td><td style="color:#4ade80;padding:6px 8px;text-align:right;font-weight:600;font-size:0.85rem;">R$ 159.333,49</td></tr><tr><td style="color:#94a3b8;padding:6px 8px;font-size:0.85rem;">Honorários Cível</td><td style="color:#4ade80;padding:6px 8px;text-align:right;font-weight:600;font-size:0.85rem;">R$ 19.299,72</td></tr><tr><td style="color:#94a3b8;padding:6px 8px;font-size:0.85rem;">Honorários contratuais</td><td style="color:#4ade80;padding:6px 8px;text-align:right;font-weight:600;font-size:0.85rem;">R$ 15.515,25</td></tr><tr><td style="color:#94a3b8;padding:6px 8px;font-size:0.85rem;">Honorários Trabalhista</td><td style="color:#4ade80;padding:6px 8px;text-align:right;font-weight:600;font-size:0.85rem;">R$ 14.409,51</td></tr><tr><td style="color:#94a3b8;padding:6px 8px;font-size:0.85rem;">Reembolso de Clientes</td><td style="color:#4ade80;padding:6px 8px;text-align:right;font-weight:600;font-size:0.85rem;">R$ 200,00</td></tr><tr><td style="color:#94a3b8;padding:6px 8px;font-size:0.85rem;">Rendimento Aplicação Automática</td><td style="color:#4ade80;padding:6px 8px;text-align:right;font-weight:600;font-size:0.85rem;">R$ 50,59</td></tr></table></div><div class="table-card"><h3 style="color:#f87171;margin-bottom:10px;">Despesas por Plano</h3><table width="100%"><tr><td style="color:#94a3b8;padding:6px 8px;font-size:0.85rem;">Despesas Particulares</td><td style="color:#f87171;padding:6px 8px;text-align:right;font-weight:600;font-size:0.85rem;">R$ 120.303,53</td></tr><tr><td style="color:#94a3b8;padding:6px 8px;font-size:0.85rem;">Rescisão</td><td style="color:#f87171;padding:6px 8px;text-align:right;font-weight:600;font-size:0.85rem;">R$ 109.386,98</td></tr><tr><td style="color:#94a3b8;padding:6px 8px;font-size:0.85rem;">Salário</td><td style="color:#f87171;padding:6px 8px;text-align:right;font-weight:600;font-size:0.85rem;">R$ 71.300,00</td></tr><tr><td style="color:#94a3b8;padding:6px 8px;font-size:0.85rem;">Processuais</td><td style="color:#f87171;padding:6px 8px;text-align:right;font-weight:600;font-size:0.85rem;">R$ 32.690,76</td></tr><tr><td style="color:#94a3b8;padding:6px 8px;font-size:0.85rem;">FGTS Rescisório</td><td style="color:#f87171;padding:6px 8px;text-align:right;font-weight:600;font-size:0.85rem;">R$ 23.008,36</td></tr><tr><td style="color:#94a3b8;padding:6px 8px;font-size:0.85rem;">IR Previdenciário</td><td style="color:#f87171;padding:6px 8px;text-align:right;font-weight:600;font-size:0.85rem;">R$ 22.702,86</td></tr><tr><td style="color:#94a3b8;padding:6px 8px;font-size:0.85rem;">Repasse</td><td style="color:#f87171;padding:6px 8px;text-align:right;font-weight:600;font-size:0.85rem;">R$ 17.564,42</td></tr><tr><td style="color:#94a3b8;padding:6px 8px;font-size:0.85rem;">Vale Refeição</td><td style="color:#f87171;padding:6px 8px;text-align:right;font-weight:600;font-size:0.85rem;">R$ 16.584,52</td></tr></table></div></div><div class="ind-row"><div class="ind-card"><h4>Indicadores de Receitas</h4><span class="ind-badge green">Baixados: 170</span><span class="ind-badge yellow">Pendentes: 65</span><span class="ind-badge red">Atrasados: 65</span><span class="ind-badge blue">Total: 235</span></div><div class="ind-card"><h4>Indicadores de Despesas</h4><span class="ind-badge green">Baixados: 193</span><span class="ind-badge yellow">Pendentes: 17</span><span class="ind-badge red">Atrasados: 17</span><span class="ind-badge blue">Total: 210</span></div></div></div><div class="month-detail" id="detail-Junho" style="display:none;"><div class="detail-header"><h2 style="color:#60a5fa;font-size:1.4rem;">Junho 2026</h2><button onclick="hideDetail()" class="btn-close">✕ Fechar</button></div><div class="kpi-row"><div class="kpi-card"><div class="kpi-label">Total Receitas</div><div class="kpi-value pos">R$ 283.823,99</div><div class="kpi-sub">191 lanç. | Realizado: R$ 64.264,85</div></div><div class="kpi-card"><div class="kpi-label">Total Despesas</div><div class="kpi-value neg">R$ 128.068,76</div><div class="kpi-sub">38 lanç. | Realizado: R$ 106.337,30</div></div><div class="kpi-card"><div class="kpi-label">Saldo do Mês</div><div class="kpi-value" style="color:#4ade80;">R$ 155.755,23</div><div class="kpi-sub">Pendente Rec: R$ 219.559,14</div></div></div><div class="tables-row"><div class="table-card"><h3 style="color:#60a5fa;margin-bottom:10px;">Receitas por Plano</h3><table width="100%"><tr><td style="color:#94a3b8;padding:6px 8px;font-size:0.85rem;">Honorários mensais</td><td style="color:#4ade80;padding:6px 8px;text-align:right;font-weight:600;font-size:0.85rem;">R$ 155.820,26</td></tr><tr><td style="color:#94a3b8;padding:6px 8px;font-size:0.85rem;">Acordo Trabalhista</td><td style="color:#4ade80;padding:6px 8px;text-align:right;font-weight:600;font-size:0.85rem;">R$ 70.397,76</td></tr><tr><td style="color:#94a3b8;padding:6px 8px;font-size:0.85rem;">Honorários Previdenciários</td><td style="color:#4ade80;padding:6px 8px;text-align:right;font-weight:600;font-size:0.85rem;">R$ 18.841,67</td></tr><tr><td style="color:#94a3b8;padding:6px 8px;font-size:0.85rem;">Honorários Cível</td><td style="color:#4ade80;padding:6px 8px;text-align:right;font-weight:600;font-size:0.85rem;">R$ 17.793,54</td></tr><tr><td style="color:#94a3b8;padding:6px 8px;font-size:0.85rem;">Honorários contratuais</td><td style="color:#4ade80;padding:6px 8px;text-align:right;font-weight:600;font-size:0.85rem;">R$ 9.419,75</td></tr><tr><td style="color:#94a3b8;padding:6px 8px;font-size:0.85rem;">Honorários Trabalhista</td><td style="color:#4ade80;padding:6px 8px;text-align:right;font-weight:600;font-size:0.85rem;">R$ 9.050,48</td></tr><tr><td style="color:#94a3b8;padding:6px 8px;font-size:0.85rem;">Vínculo de emprego</td><td style="color:#4ade80;padding:6px 8px;text-align:right;font-weight:600;font-size:0.85rem;">R$ 2.000,00</td></tr><tr><td style="color:#94a3b8;padding:6px 8px;font-size:0.85rem;">Consulta Cível</td><td style="color:#4ade80;padding:6px 8px;text-align:right;font-weight:600;font-size:0.85rem;">R$ 300,00</td></tr></table></div><div class="table-card"><h3 style="color:#f87171;margin-bottom:10px;">Despesas por Plano</h3><table width="100%"><tr><td style="color:#94a3b8;padding:6px 8px;font-size:0.85rem;">Repasse</td><td style="color:#f87171;padding:6px 8px;text-align:right;font-weight:600;font-size:0.85rem;">R$ 103.416,91</td></tr><tr><td style="color:#94a3b8;padding:6px 8px;font-size:0.85rem;">Despesas Particulares</td><td style="color:#f87171;padding:6px 8px;text-align:right;font-weight:600;font-size:0.85rem;">R$ 12.952,60</td></tr><tr><td style="color:#94a3b8;padding:6px 8px;font-size:0.85rem;">Administrativas</td><td style="color:#f87171;padding:6px 8px;text-align:right;font-weight:600;font-size:0.85rem;">R$ 2.420,12</td></tr><tr><td style="color:#94a3b8;padding:6px 8px;font-size:0.85rem;">Processuais</td><td style="color:#f87171;padding:6px 8px;text-align:right;font-weight:600;font-size:0.85rem;">R$ 2.380,00</td></tr><tr><td style="color:#94a3b8;padding:6px 8px;font-size:0.85rem;">Marketing e Publicidade</td><td style="color:#f87171;padding:6px 8px;text-align:right;font-weight:600;font-size:0.85rem;">R$ 1.800,00</td></tr><tr><td style="color:#94a3b8;padding:6px 8px;font-size:0.85rem;">Guia de GPS - Terceiros</td><td style="color:#f87171;padding:6px 8px;text-align:right;font-weight:600;font-size:0.85rem;">R$ 1.248,17</td></tr><tr><td style="color:#94a3b8;padding:6px 8px;font-size:0.85rem;">Licença de Uso - Hospedagem/ Dominio (E-mails)</td><td style="color:#f87171;padding:6px 8px;text-align:right;font-weight:600;font-size:0.85rem;">R$ 932,99</td></tr><tr><td style="color:#94a3b8;padding:6px 8px;font-size:0.85rem;">Energia Elétrica</td><td style="color:#f87171;padding:6px 8px;text-align:right;font-weight:600;font-size:0.85rem;">R$ 658,80</td></tr></table></div></div><div class="ind-row"><div class="ind-card"><h4>Indicadores de Receitas</h4><span class="ind-badge green">Baixados: 47</span><span class="ind-badge yellow">Pendentes: 164</span><span class="ind-badge red">Atrasados: 25</span><span class="ind-badge blue">Total: 211</span></div><div class="ind-card"><h4>Indicadores de Despesas</h4><span class="ind-badge green">Baixados: 22</span><span class="ind-badge yellow">Pendentes: 36</span><span class="ind-badge red">Atrasados: 14</span><span class="ind-badge blue">Total: 58</span></div></div></div></div>
+    </div>
+    <div class="footer">Dados extraídos do Projuris ADV &bull; Sousa e Maciel Advogados &bull; 2026</div>
   </div>
 
   <script>
-  // PASSWORD CHECK
-  // Hash stored: SHA-256 of "Samara@26"
-  const HASH = "f773d82972de3cb15384f889d6ecc7550e05a36ca428bfbe40d9a4e2d73c4cd8";
-
-  async function sha256(msg) {
-    const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(msg));
-    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2,'0')).join('');
-  }
-
-  async function checkPassword() {
-    const val = document.getElementById('pw-input').value;
-    const hash = await sha256(val);
-    if (hash === HASH) {
-      document.getElementById('pw-overlay').style.display = 'none';
-      document.getElementById('dashboard').style.display = 'block';
-      sessionStorage.setItem('auth', '1');
-      initCharts();
-    } else {
-      const inp = document.getElementById('pw-input');
-      inp.classList.add('error');
-      document.getElementById('pw-error').textContent = 'Senha incorreta. Tente novamente.';
-      setTimeout(() => inp.classList.remove('error'), 400);
+    // Password check
+    async function sha256(msg) {
+      const buf = await crypto.subtle.digest("SHA-256", new TextEncoder().encode(msg));
+      return Array.from(new Uint8Array(buf)).map(b=>b.toString(16).padStart(2,"0")).join("");
     }
-  }
-
-  document.getElementById('pw-input').addEventListener('keydown', e => {
-    if (e.key === 'Enter') checkPassword();
-  });
-
-  // Check session
-  if (sessionStorage.getItem('auth') === '1') {
-    document.getElementById('pw-overlay').style.display = 'none';
-    document.getElementById('dashboard').style.display = 'block';
-  }
-
-  // DASHBOARD DATA & CHARTS
-  function initCharts() {
-    const receitasPorPlano = [
-      {plano:"Honorários Advocatícios",qtd:89,total:187432.50,recebido:28150.00,pendente:159282.50},
-      {plano:"Consultas Jurídicas",qtd:44,total:62180.00,recebido:10230.00,pendente:51950.00},
-      {plano:"Contratos de Assessoria",qtd:31,total:45200.00,recebido:8400.00,pendente:36800.00},
-      {plano:"Audiências e Diligências",qtd:18,total:22800.00,recebido:4200.00,pendente:18600.00},
-      {plano:"Custas e Emolumentos",qtd:12,total:15400.00,recebido:1840.15,pendente:13559.85},
-      {plano:"Repasses e Acordos",qtd:8,total:12500.00,recebido:1000.00,pendente:11500.00},
-      {plano:"Pareceres e Documentos",qtd:6,total:8321.33,recebido:0,pendente:8321.33},
-      {plano:"Taxas Administrativas",qtd:3,total:5000.00,recebido:0,pendente:5000.00}
-    ];
-    const despesasPorPlano = [
-      {plano:"Pessoal e Encargos",qtd:15,total:52800.00,pago:52800.00,pendente:0},
-      {plano:"Aluguel e Imóveis",qtd:3,total:18500.00,pago:18500.00,pendente:0},
-      {plano:"Despesas Processuais",qtd:11,total:18562.92,pago:9537.30,pendente:9025.62},
-      {plano:"Tecnologia e Software",qtd:8,total:14200.00,pago:12800.00,pendente:1400.00},
-      {plano:"Honorários de Terceiros",qtd:5,total:12000.00,pago:5000.00,pendente:7000.00},
-      {plano:"Outras Despesas",qtd:3,total:17000.00,pago:0,pendente:17000.00},
-      {plano:"Marketing e Publicidade",qtd:4,total:7200.00,pago:4500.00,pendente:2700.00},
-      {plano:"Treinamento e Capacitação",qtd:2,total:5500.00,pago:0,pendente:5500.00}
-    ];
-    function fmt(v){return 'R$ '+v.toLocaleString('pt-BR',{minimumFractionDigits:2,maximumFractionDigits:2});}
-    const tbR=document.getElementById('tbReceitas');
-    receitasPorPlano.forEach(r=>{
-      const pct=r.total>0?(r.recebido/r.total*100).toFixed(0):0;
-      tbR.innerHTML+=`<tr><td>${r.plano}</td><td><span class="badge badge-blue">${r.qtd}</span></td><td class="tag-receita">${fmt(r.total)}</td><td><span class="badge badge-green">${fmt(r.recebido)}</span></td><td><span class="badge badge-yellow">${fmt(r.pendente)}</span></td><td>${pct}% recebido</td></tr>`;
-    });
-    const tbD=document.getElementById('tbDespesas');
-    despesasPorPlano.forEach(d=>{
-      const pct=d.total>0?(d.pago/d.total*100).toFixed(0):0;
-      tbD.innerHTML+=`<tr><td>${d.plano}</td><td><span class="badge badge-blue">${d.qtd}</span></td><td class="tag-despesa">${fmt(d.total)}</td><td><span class="badge badge-green">${fmt(d.pago)}</span></td><td><span class="badge badge-red">${fmt(d.pendente)}</span></td><td>${pct}% pago</td></tr>`;
-    });
-    const cd={plugins:{legend:{labels:{color:'#94a3b8',font:{size:12}}}},scales:{x:{ticks:{color:'#94a3b8'},grid:{color:'#334155'}},y:{ticks:{color:'#94a3b8'},grid:{color:'#334155'}}}};
-    new Chart(document.getElementById('chartReceitaSit'),{type:'doughnut',data:{labels:['Recebida (R$ 53.820)','Pendente (R$ 305.014)','Atrasada (26 lanç.)'],datasets:[{data:[53820.15,305013.68,0],backgroundColor:['#10b981','#f59e0b','#ef4444'],borderColor:'#1e293b',borderWidth:3}]},options:{plugins:{legend:{position:'bottom',labels:{color:'#94a3b8',padding:16}}},cutout:'65%'}});
-    new Chart(document.getElementById('chartDespesaSit'),{type:'doughnut',data:{labels:['Pago (R$ 106.337)','Pendente (R$ 44.726)','Atrasado (14 lanç.)'],datasets:[{data:[106337.30,44725.62,0],backgroundColor:['#3b82f6','#f59e0b','#ef4444'],borderColor:'#1e293b',borderWidth:3}]},options:{plugins:{legend:{position:'bottom',labels:{color:'#94a3b8',padding:16}}},cutout:'65%'}});
-    new Chart(document.getElementById('chartComparativo'),{type:'bar',data:{labels:['Receitas','Despesas'],datasets:[{label:'Total Projetado',data:[358833.83,151062.92],backgroundColor:['#3b82f688','#ef444488'],borderColor:['#3b82f6','#ef4444'],borderWidth:2},{label:'Realizado',data:[53820.15,106337.30],backgroundColor:['#10b98188','#f59e0b88'],borderColor:['#10b981','#f59e0b'],borderWidth:2}]},options:cd});
-    const top8R=receitasPorPlano.slice(0,8);
-    new Chart(document.getElementById('chartReceitaPlano'),{type:'bar',data:{labels:top8R.map(r=>r.plano.length>22?r.plano.substring(0,22)+'…':r.plano),datasets:[{label:'Recebido',data:top8R.map(r=>r.recebido),backgroundColor:'#10b98188',borderColor:'#10b981',borderWidth:1},{label:'Pendente',data:top8R.map(r=>r.pendente),backgroundColor:'#f59e0b88',borderColor:'#f59e0b',borderWidth:1}]},options:{indexAxis:'y',...cd,scales:{x:{stacked:true,ticks:{color:'#94a3b8'},grid:{color:'#334155'}},y:{stacked:true,ticks:{color:'#94a3b8',font:{size:10}},grid:{color:'#334155'}}}}});
-    const top8D=despesasPorPlano.slice(0,8);
-    new Chart(document.getElementById('chartDespesaPlano'),{type:'bar',data:{labels:top8D.map(d=>d.plano.length>22?d.plano.substring(0,22)+'…':d.plano),datasets:[{label:'Pago',data:top8D.map(d=>d.pago),backgroundColor:'#3b82f688',borderColor:'#3b82f6',borderWidth:1},{label:'Pendente',data:top8D.map(d=>d.pendente),backgroundColor:'#ef444488',borderColor:'#ef4444',borderWidth:1}]},options:{indexAxis:'y',...cd,scales:{x:{stacked:true,ticks:{color:'#94a3b8'},grid:{color:'#334155'}},y:{stacked:true,ticks:{color:'#94a3b8',font:{size:10}},grid:{color:'#334155'}}}}});
-  }
-
-  // Auto-init if already authenticated
-  if (sessionStorage.getItem('auth') === '1') initCharts();
+    async function checkPw() {
+      var pw = document.getElementById("pw-input").value;
+      var h = await sha256(pw);
+      var stored = "f773d82972de3cb15384f889d6ecc7550e05a36ca428bfbe40d9a4e2d73c4cd8";
+      if (h === stored) {
+        document.getElementById("pw-overlay").style.display = "none";
+        document.getElementById("main-content").style.display = "block";
+        initCharts();
+      } else {
+        document.getElementById("pw-error").style.display = "block";
+        document.getElementById("pw-input").value = "";
+        document.getElementById("pw-input").focus();
+      }
+    }
+    // Charts
+    var chartMain, chartSaldo;
+    var labels = ["Jan/26","Fev/26","Mar/26","Abr/26","Mai/26","Jun/26"];
+    var receitas = [259128,595232,328051,425444,554354,283824];
+    var despesas = [81018,309046,103807,607564,485147,128069];
+    var saldos = [178110,286186,224244,-182119,69208,155755];
+    function initCharts() {
+      var ctx1 = document.getElementById("chartMain").getContext("2d");
+      chartMain = new Chart(ctx1, {
+        type: "bar",
+        data: {
+          labels: labels,
+          datasets: [
+            { label: "Receitas", data: receitas, backgroundColor: "rgba(74,222,128,0.7)", borderColor: "#4ade80", borderWidth: 1, borderRadius: 4 },
+            { label: "Despesas", data: despesas, backgroundColor: "rgba(248,113,113,0.7)", borderColor: "#f87171", borderWidth: 1, borderRadius: 4 }
+          ]
+        },
+        options: {
+          responsive: true,
+          plugins: { legend: { labels: { color: "#94a3b8" } } },
+          scales: {
+            x: { ticks: { color: "#94a3b8" }, grid: { color: "#1e293b" } },
+            y: { ticks: { color: "#94a3b8", callback: function(v){ return "R$ " + (v/1000).toFixed(0) + "k"; } }, grid: { color: "#334155" } }
+          }
+        }
+      });
+      var ctx2 = document.getElementById("chartSaldo").getContext("2d");
+      chartSaldo = new Chart(ctx2, {
+        type: "bar",
+        data: {
+          labels: labels,
+          datasets: [{ label: "Saldo", data: saldos, backgroundColor: saldos.map(function(v){return v>=0?"rgba(74,222,128,0.7)":"rgba(248,113,113,0.7)"}), borderColor: saldos.map(function(v){return v>=0?"#4ade80":"#f87171"}), borderWidth: 1, borderRadius: 4 }]
+        },
+        options: {
+          responsive: true,
+          plugins: { legend: { labels: { color: "#94a3b8" } } },
+          scales: {
+            x: { ticks: { color: "#94a3b8" }, grid: { color: "#1e293b" } },
+            y: { ticks: { color: "#94a3b8", callback: function(v){ return "R$ " + (v/1000).toFixed(0) + "k"; } }, grid: { color: "#334155" } }
+          }
+        }
+      });
+    }
+    function showChart(type, btn) {
+      document.querySelectorAll(".chart-tab").forEach(function(t){t.classList.remove("active")});
+      btn.classList.add("active");
+      if (type === "bar") {
+        document.getElementById("chartMain").style.display = "";
+        document.getElementById("chartSaldo").style.display = "none";
+      } else {
+        document.getElementById("chartMain").style.display = "none";
+        document.getElementById("chartSaldo").style.display = "";
+      }
+    }
+    // Month detail
+    function showMonth(m) {
+      document.querySelectorAll(".month-detail").forEach(function(d){d.style.display="none"});
+      var el = document.getElementById("detail-" + m);
+      if (el) { el.style.display = "block"; el.scrollIntoView({behavior:"smooth", block:"start"}); }
+    }
+    function hideDetail() {
+      document.querySelectorAll(".month-detail").forEach(function(d){d.style.display="none"});
+    }
   </script>
 </body>
 </html>
