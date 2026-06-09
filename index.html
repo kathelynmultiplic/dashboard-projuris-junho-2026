@@ -164,7 +164,6 @@
 .plano-row{cursor:pointer;transition:background 0.2s;}
 .plano-row:hover{background:rgba(96,165,250,0.1)!important;}
 .plano-row.ativo{background:rgba(96,165,250,0.2)!important;box-shadow:inset 3px 0 0 #60a5fa;}
-
 .destaque{background:rgba(96,165,250,0.15)!important;box-shadow:inset 3px 0 0 #60a5fa;transition:all 0.25s;}
 .opaco{opacity:0.2!important;transition:opacity 0.25s;}
 .sah-badge{background:rgba(96,165,250,0.2);color:#60a5fa;font-size:0.6rem;padding:0px 5px;border-radius:8px;margin-left:5px;font-weight:700;vertical-align:middle;}
@@ -173,25 +172,169 @@
 </style>
 <script>
 (function(){
-var mapa={"Janeiro":{"Repasse":["Paulo Roberto de Paula Siqueira","Wellington Santos de Almeida","Anderson Iwanaga Iamamoto","Rosemar Minutti","Genival Gomes da Silva","Camila Vitoria Albuquerque","Selma de Fatima Alves","Joza Maria Agripino dos Santos","Cicero Garcia Cruz","Cicero Joao da Silva"]},"Fevereiro":{"Repasse":["Thalita Rodrigues Ribeiro Maciel","Douglas de Souza Santos","Michele Ribeiro de Carvalho","Venancio Pereira Damacena Neto","Anderson Iwanaga Iamamoto","Ana Flavia Queiroz Furtado","Joza Maria Agripino dos Santos"]},"Marco":{"Repasse":["Arnaldo Carlos de Souza","Paulo Roberto de Paula Siqueira","Anderson Iwanaga Iamamoto","Ana Flavia Queiroz Furtado","Camila Vitoria Albuquerque","Rosemar Minutti","Genival Gomes da Silva","Fernando Souza de Assis Santos","Marcos Sech Machado Dias"]},"Abril":{"Repasse":["Itau Unibanco S.A.","Samara Maria Sousa Maciel","Valquiria Salgueiro Silva","Julieta Bortolace","Larissa Lauan Simao da Silva"]},"Maio":{"Repasse":["Kelly Oliveira Christo","Tatiane Phaenna Canella Toledo","Danyelle dos Santos Guimaraes","Juliana Michelli Lara Lima","Edvania de Jesus Gomes Lobo","Giovanna Araujo Gomes"]},"Junho":{"Repasse":["Antonio Luis Rodrigues Pereira","Marinei Josefa Jordao da Silva","Paulo Roberto de Paula Siqueira","Eliomar Franca","Jessica Caroline dos Santos","Fernando Souza de Assis Santos"]}};
+var mapa={
+"Janeiro":{
+"Honorarios mensais":["Mais Mega Loja Confeccao E Comercio de Roupas LTDA","Vigent Construcoes LTDA","Ana Flavia Queiroz Furtado","Catter Engenharia LTDA","Rosemar Minutti","Genival Gomes da Silva","Camila Vitoria Albuquerque","Paulo Roberto de Paula Siqueira","Multiplic Servicos de Tecnologia Ltda"],
+"Acordo Trabalhista":["Wellington Santos de Almeida"],
+"Honorarios Civel":["Mais Mega Loja Confeccao E Comercio de Roupas LTDA","Vigent Construcoes LTDA"],
+"Honorarios contratuais":["Multiplic Servicos de Tecnologia Ltda","Catter Engenharia LTDA"],
+"Honorarios Previdenciarios":["Paulo Roberto de Paula Siqueira","Wellington Santos de Almeida"],
+"Honorarios Trabalhista":["Wellington Santos de Almeida"],
+"Reembolso de Clientes":[],
+"Processuais":["Paulo Roberto de Paula Siqueira","Wellington Santos de Almeida","Rosemar Minutti","Genival Gomes da Silva","Camila Vitoria Albuquerque","Selma de Fatima Alves","Joza Maria Agripino dos Santos","Cicero Garcia Cruz","Cicero Joao da Silva"],
+"Administrativas":["Anderson Iwanaga Iamamoto","Joza Maria Agripino dos Santos"],
+"Repasse":["Paulo Roberto de Paula Siqueira","Wellington Santos de Almeida","Anderson Iwanaga Iamamoto","Rosemar Minutti","Genival Gomes da Silva","Camila Vitoria Albuquerque","Selma de Fatima Alves","Joza Maria Agripino dos Santos","Cicero Garcia Cruz","Cicero Joao da Silva"],
+"Comissao por Indicacao":[]
+},
+"Fevereiro":{
+"Honorarios Trabalhista":["Thalita Rodrigues Ribeiro Maciel","Douglas de Souza Santos","Michele Ribeiro de Carvalho","Venancio Pereira Damacena Neto","Bianca da Silva Santos"],
+"Honorarios mensais":["Margareth Costa Carvalho","Vigent Construcoes LTDA","Ana Flavia Queiroz Furtado","Acquasprings Construcoes Inteligentes LTDA","Ferrobras Aluminio Ltda"],
+"Acordo Trabalhista":["Thalita Rodrigues Ribeiro Maciel","Douglas de Souza Santos","Michele Ribeiro de Carvalho"],
+"Honorarios Civel":["Acquasprings Construcoes Inteligentes LTDA","Ferrobras Aluminio Ltda"],
+"Honorarios contratuais":["Ferrobras Aluminio Ltda","Acquasprings Construcoes Inteligentes LTDA"],
+"Honorarios Previdenciarios":["Venancio Pereira Damacena Neto"],
+"Reembolso de Clientes":[],
+"Processuais":["Thalita Rodrigues Ribeiro Maciel","Douglas de Souza Santos","Michele Ribeiro de Carvalho","Venancio Pereira Damacena Neto","Bianca da Silva Santos","Paulo Roberto de Paula Siqueira","Rosemar Minutti"],
+"Administrativas":["Anderson Iwanaga Iamamoto","Ana Flavia Queiroz Furtado","Joza Maria Agripino dos Santos"],
+"Repasse":["Thalita Rodrigues Ribeiro Maciel","Douglas de Souza Santos","Michele Ribeiro de Carvalho","Venancio Pereira Damacena Neto","Anderson Iwanaga Iamamoto","Ana Flavia Queiroz Furtado","Joza Maria Agripino dos Santos"],
+"Comissao por Indicacao":["Paulo Roberto de Paula Siqueira","Rosemar Minutti"]
+},
+"Marco":{
+"Acordo Trabalhista":["Arnaldo Carlos de Souza","Bruno Morais Lima","Francisco Eduardo da Silva","Nacelia Gomes Teixeira"],
+"Honorarios mensais":["Margareth Costa Carvalho","Vigent Construcoes LTDA","Paulo Roberto de Paula Siqueira","Ana Flavia Queiroz Furtado","Acquasprings Construcoes Inteligentes LTDA"],
+"Honorarios Civel":["Jhonatan de Almeida Santos","Acquasprings Construcoes Inteligentes LTDA"],
+"Honorarios contratuais":["Vigent Construcoes LTDA","Acquasprings Construcoes Inteligentes LTDA"],
+"Honorarios Previdenciarios":["Paulo Roberto de Paula Siqueira"],
+"Honorarios Trabalhista":["Bruno Morais Lima","Francisco Eduardo da Silva"],
+"Reembolso de Clientes":[],
+"Processuais":["Arnaldo Carlos de Souza","Paulo Roberto de Paula Siqueira","Ana Flavia Queiroz Furtado","Camila Vitoria Albuquerque","Rosemar Minutti","Genival Gomes da Silva","Fernando Souza de Assis Santos","Marcos Sech Machado Dias"],
+"Administrativas":["Anderson Iwanaga Iamamoto","Fernando Souza de Assis Santos","Marcos Sech Machado Dias"],
+"Cartao de Credito - Assai":["Itaucard - Cartao Assai"],
+"Repasse":["Arnaldo Carlos de Souza","Paulo Roberto de Paula Siqueira","Anderson Iwanaga Iamamoto","Ana Flavia Queiroz Furtado","Camila Vitoria Albuquerque","Rosemar Minutti","Genival Gomes da Silva","Fernando Souza de Assis Santos","Marcos Sech Machado Dias"],
+"Cartao de Credito - Uniclass":[],
+"Comissao por Indicacao":[],
+"IPTU":[]
+},
+"Abril":{
+"Honorarios mensais":["Margareth Costa Carvalho","Vigent Construcoes LTDA","Roberto Pinto dos Santos","Mercado Ara Sao Pedro Ltda Me","Drogaria So Bencao"],
+"Acordo Trabalhista":["Hellen Cristina Duarte Medrado","Valquiria Salgueiro Silva","EDUARDO MAURICIO SOC IND ADV","Adenilson Gomes da Silva","Jodemilson Sardinha dos Santos"],
+"Receita Sem Identificacao":[],
+"Honorarios Civel":["Mercado Ara Sao Pedro Ltda Me","Drogaria So Bencao","Roberto Pinto dos Santos"],
+"Honorarios contratuais":["Vigent Construcoes LTDA"],
+"Honorarios Previdenciarios":["Hellen Cristina Duarte Medrado"],
+"Honorarios Trabalhista":["EDUARDO MAURICIO SOC IND ADV"],
+"Reembolso de Clientes":[],
+"Despesas Particulares":["Itau Unibanco S.A.","Samara Maria Sousa Maciel"],
+"Salario":["Jackeline Ferreira Leocadio","Hellen Cristina Duarte Medrado","Henrique Aparecido Matias"],
+"Repasse":["Itau Unibanco S.A.","Samara Maria Sousa Maciel","Valquiria Salgueiro Silva","Julieta Bortolace","Larissa Lauan Simao da Silva"],
+"Rescisao":["Valquiria Salgueiro Silva","Julieta Bortolace","Larissa Lauan Simao da Silva","Ministerio do Trabalho e Emprego"],
+"Processuais":["Receita Federal","Ministerio do Trabalho e Emprego"],
+"Vale Refeicao":[],
+"IR Previdenciario":["Receita Federal"],
+"Administrativas":["Anderson Iwanaga Iamamoto"]
+},
+"Maio":{
+"Acordo Trabalhista":["Jailson dos Santos Buriti","Antonio Luis Rodrigues Pereira","Marinei Josefa Jordao da Silva","Willamis Jose Batista de Lima","JC Pavimentacao e Locacao Ltda"],
+"Honorarios Previdenciarios":["Jailson dos Santos Buriti","Antonio Luis Rodrigues Pereira","Marinei Josefa Jordao da Silva"],
+"Honorarios mensais":["Vigent Construcoes LTDA","Margareth Costa Carvalho","Ana Flavia Queiroz Furtado","Nutra Premium Alimentacao Ltda","Maria Luiza Verissimo Da Silva Bueno"],
+"Honorarios Civel":["JC Pavimentacao e Locacao Ltda","Maria Luiza Verissimo Da Silva Bueno"],
+"Honorarios contratuais":["Nutra Premium Alimentacao Ltda"],
+"Honorarios Trabalhista":["Willamis Jose Batista de Lima"],
+"Reembolso de Clientes":[],
+"Rendimento Aplicacao Automatica":[],
+"Despesas Particulares":["Itau Unibanco Holding S.a"],
+"Rescisao":["Kelly Oliveira Christo","Tatiane Phaenna Canella Toledo","Ministerio do Trabalho e Emprego","Danyelle dos Santos Guimaraes","Giovanna Araujo Gomes","Edvania de Jesus Gomes Lobo"],
+"Salario":["Juliana Michelli Lara Lima","Edvania de Jesus Gomes Lobo","Giovanna Araujo Gomes"],
+"Processuais":["Receita Federal","Ministerio do Trabalho e Emprego"],
+"FGTS Rescisorios":["Ministerio do Trabalho e Emprego","Receita Federal"],
+"IR Previdenciario":["Receita Federal"],
+"Repasse":["Kelly Oliveira Christo","Tatiane Phaenna Canella Toledo","Danyelle dos Santos Guimaraes","Juliana Michelli Lara Lima","Edvania de Jesus Gomes Lobo","Giovanna Araujo Gomes"],
+"Vale Refeicao":["PLUXEE INSTITUICAO DE PAGAMENTO BRASIL"]
+},
+"Junho":{
+"Honorarios mensais":["Margareth Costa Carvalho","Vigent Construcoes LTDA","Eliomar Franca","Ana Flavia Queiroz Furtado","Nutra Premium Alimentacao Ltda","Willamis Jose Batista de Lima","Genival Gomes da Silva","Rosemar Minutti"],
+"Acordo Trabalhista":["Antonio Luis Rodrigues Pereira","Eliomar Franca"],
+"Honorarios Previdenciarios":["Eliomar Franca","Marinei Josefa Jordao da Silva"],
+"Honorarios Civel":["Prodec Protecao e Decoracao de Metais LTDA","JC Pavimentacao e Locacao Ltda"],
+"Honorarios contratuais":["Nutra Premium Alimentacao Ltda"],
+"Honorarios Trabalhista":["Willamis Jose Batista de Lima"],
+"Vinculo de emprego":["Ana Flavia Queiroz Furtado"],
+"Consulta Civel":[],
+"Repasse":["Antonio Luis Rodrigues Pereira","Marinei Josefa Jordao da Silva","Paulo Roberto de Paula Siqueira","Eliomar Franca","Jessica Caroline dos Santos","Fernando Souza de Assis Santos"],
+"Despesas Particulares":["Escola Internacional A Ltda","Condominio On The Park"],
+"Administrativas":["Anderson Iwanaga Iamamoto","Fernando Souza de Assis Santos","Jessica Caroline dos Santos"],
+"Processuais":["Antonio Luis Rodrigues Pereira","Paulo Roberto de Paula Siqueira"],
+"Marketing e Publicidade":["Bertolart Studio"],
+"Guia de GPS - Terceiros":["Boulevard Sao Paulo Assessoria Empresarial EIRELI"],
+"Licenca de Uso - Hospedagem Dominio E-mails":[],
+"Energia Eletrica":[]
+}
+};
 function norm(s){return s.normalize("NFD").replace(/[\u0300-\u036f]/g,"").toLowerCase().trim();}
 function ativar(mes){
 var det=document.getElementById("detail-"+mes);if(!det)return;
 var cards=det.querySelectorAll(".table-card");
-var dc=cards[1],fc=cards[3];if(!dc||!fc)return;
-if(dc._sah)return;dc._sah=1;
-var fh=fc.querySelector("h3");
-if(fh&&!document.getElementById("fhint-"+mes)){var hint=document.createElement("div");hint.className="forn-hint";hint.id="fhint-"+mes;hint.textContent="\u2192 Fornecedores do plano selecionado";fh.after(hint);}
-var mk=mes==="Mar\u00e7o"?"Marco":mes;
+var rcCard=cards[0],dcCard=cards[1],cliCard=cards[2],fornCard=cards[3];
+if(!rcCard||!dcCard)return;
+var mk=mes==="ço"||mes==="Março"?"Marco":mes;
 var pm=mapa[mk]||{};
-var rows=dc.querySelectorAll("tr");
-rows.forEach(function(tr){tr.classList.add("plano-row");var tds=tr.querySelectorAll("td");if(!tds.length)return;var pn=tds[0].textContent.trim();if(pm[pn]&&!tds[0]._badge){var b=document.createElement("span");b.className="sah-badge";b.title="Clique para ver os fornecedores deste plano";b.textContent="\u25BA";tds[0].appendChild(b);tds[0]._badge=1;}tr.addEventListener("click",function(){var ja=tr.classList.contains("ativo");rows.forEach(function(r){r.classList.remove("ativo");});var fr=fc.querySelectorAll("tbody tr");fr.forEach(function(r){r.classList.remove("destaque","opaco");});var hint=document.getElementById("fhint-"+mes);if(hint)hint.classList.remove("on");if(!ja&&pm[pn]){tr.classList.add("ativo");var fl=pm[pn].map(norm);fr.forEach(function(r){var t=r.querySelectorAll("td")[1];if(!t)return;var nm=norm(t.textContent);var ok=fl.some(function(f){return nm===f||nm.indexOf(f)>-1||f.indexOf(nm)>-1;});r.classList.add(ok?"destaque":"opaco");});if(hint)hint.classList.add("on");}});});
+function addHint(card,id){
+  var h3=card.querySelector("h3");
+  if(h3&&!document.getElementById(id)){
+    var hint=document.createElement("div");hint.className="forn-hint";hint.id=id;
+    hint.textContent="→ Mostrando relacionados ao plano selecionado";h3.after(hint);
+  }
+}
+addHint(cliCard,"chint-"+mes);
+addHint(fornCard,"fhint-"+mes);
+function setupTable(planosCard,resultsCard,hintId,rowSelector){
+  if(planosCard._sah)return;planosCard._sah=1;
+  var pRows=planosCard.querySelectorAll("tr");
+  pRows.forEach(function(tr){
+    tr.classList.add("plano-row");
+    var tds=tr.querySelectorAll("td");if(!tds.length)return;
+    var pn=tds[0].textContent.trim();
+    var pnNorm=norm(pn);
+    var lista=null;
+    // Find matching plano key
+    Object.keys(pm).forEach(function(k){
+      if(norm(k)===pnNorm||pnNorm.indexOf(norm(k))>-1||norm(k).indexOf(pnNorm)>-1)lista=pm[k];
+    });
+    var temDados=lista&&lista.length>0;
+    if(temDados&&!tds[0]._badge){
+      var b=document.createElement("span");b.className="sah-badge";
+      b.title="Clique para ver os relacionados";b.textContent="►";
+      tds[0].appendChild(b);tds[0]._badge=1;
+    }
+    tr.addEventListener("click",function(){
+      var ja=tr.classList.contains("ativo");
+      pRows.forEach(function(r){r.classList.remove("ativo");});
+      var rRows=resultsCard.querySelectorAll("tbody tr");
+      rRows.forEach(function(r){r.classList.remove("destaque","opaco");});
+      var hint=document.getElementById(hintId);if(hint)hint.classList.remove("on");
+      if(!ja&&temDados){
+        tr.classList.add("ativo");
+        var fl=lista.map(norm);
+        rRows.forEach(function(r){
+          var t=r.querySelectorAll("td")[1];if(!t)return;
+          var nm=norm(t.textContent);
+          var ok=fl.some(function(f){return nm===f||nm.indexOf(f)>-1||f.indexOf(nm)>-1;});
+          r.classList.add(ok?"destaque":"opaco");
+        });
+        if(hint)hint.classList.add("on");
+      }
+    });
+  });
+}
+setupTable(rcCard,cliCard,"chint-"+mes,"clientes");
+setupTable(dcCard,fornCard,"fhint-"+mes,"fornecedores");
 }
 var orig=window.showMonth;
 if(orig){window.showMonth=function(m){orig(m);setTimeout(function(){ativar(m);},80);};}
-function init(){["Janeiro","Fevereiro","Mar\u00e7o","Abril","Maio","Junho"].forEach(function(m){var d=document.getElementById("detail-"+m);if(d&&d.style.display&&d.style.display!=="none")ativar(m);});}
+function init(){["Janeiro","Fevereiro","Março","Abril","Maio","Junho"].forEach(function(m){var d=document.getElementById("detail-"+m);if(d&&d.style.display&&d.style.display!=="none")ativar(m);});}
 if(document.readyState==="loading"){document.addEventListener("DOMContentLoaded",function(){setTimeout(init,150);});}else{setTimeout(init,150);}
 })();
+
 
 </script>
 </body>
